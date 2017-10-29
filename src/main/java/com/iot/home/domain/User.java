@@ -16,10 +16,11 @@ package com.iot.home.domain;
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 @DynamoDBTable(tableName = "Customer")
-public class Customer implements Serializable {
+public class User implements Serializable {
 
     private static final long serialVersionUID = -8243145429438016232L;
 
@@ -27,25 +28,22 @@ public class Customer implements Serializable {
     private String emailId;
 
     @DynamoDBAttribute
-    private Long creationDate;
+    private String displayName;
 
-    public Customer() { }
+    @DynamoDBAttribute
+    private List<Asset> assets;
 
-    public Customer(String emailId) {
+
+    public User() { }
+
+    public User(String emailId) {
         this.emailId = emailId;
     }
 
-    public Customer(Long creationDate, String emailId) {
-        this.creationDate = creationDate;
+    public User(String emailId, String displayName, List<Asset> assets) {
         this.emailId = emailId;
-    }
-
-    public Long getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Long creationDate) {
-        this.creationDate = creationDate;
+        this.displayName = displayName;
+        this.assets = assets;
     }
 
     public String getEmailId() {
@@ -54,6 +52,22 @@ public class Customer implements Serializable {
 
     public void setEmailId(String emailId) {
         this.emailId = emailId;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public List<Asset> getAssets() {
+        return assets;
+    }
+
+    public void setAssets(List<Asset> assets) {
+        this.assets = assets;
     }
 
 }

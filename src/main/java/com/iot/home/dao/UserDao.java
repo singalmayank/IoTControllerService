@@ -15,17 +15,17 @@
 package com.iot.home.dao;
 
 
-import com.iot.home.domain.Customer;
+import com.iot.home.domain.User;
 
 import java.util.Optional;
 
 
-public interface CustomerDao {
+public interface UserDao {
 
-    Optional<Customer> findCustomerByEmailId(String emailId);
+    Optional<User> findUserByEmailId(String emailId);
 
-    void saveOrUpdateCustomer(Customer customer);
+    void saveOrUpdateUser(User user);
 
-    void deleteCustomer(String emailId);
+    void deleteUser(String emailId);
 
 }

@@ -12,11 +12,11 @@
 // permissions and limitations under the License.
 
 
-package com.iot.home.function.customer;
+package com.iot.home.function.user;
 
 
-import com.iot.home.dao.DynamoDBCustomerDao;
-import com.iot.home.domain.Customer;
+import com.iot.home.dao.DynamoDBUserDao;
+import com.iot.home.domain.User;
 import com.iot.home.util.AmazonAPIConstants;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
@@ -28,40 +28,40 @@ import java.util.Map;
 import java.util.Optional;
 
 
-public class GetDeepCustomerDetailsByEmailId implements RequestHandler<Map<String, Object>, Customer> {
+public class GetDeepUserDetailsByEmailId implements RequestHandler<Map<String, Object>, User> {
 
-    private static final Logger log = Logger.getLogger(GetDeepCustomerDetailsByEmailId.class);
+    private static final Logger log = Logger.getLogger(GetDeepUserDetailsByEmailId.class);
 
-    private static final DynamoDBCustomerDao eventDao = DynamoDBCustomerDao.instance();
+    private static final DynamoDBUserDao userDao = DynamoDBUserDao.instance();
 
-    private Customer execute(String emailId) throws UnsupportedEncodingException {
+    public User execute(String emailId) throws UnsupportedEncodingException {
 
         if (null == emailId || emailId.isEmpty() || emailId.equals(AmazonAPIConstants.UNDEFINED)) {
-            log.error("GetDeepCustomerDetailsByEmailId received null or empty emailId");
+            log.error("GetDeepUserDetailsByEmailId received null or empty emailId");
             throw new IllegalArgumentException("emailId name cannot be null or empty");
         }
 
         String name = URLDecoder.decode(emailId, "UTF-8");
-        log.info("GetDeepCustomerDetailsByEmailId invoked for customer with name = " + name);
-        Optional<Customer> oCustomer = eventDao.findCustomerByEmailId(name);
+        log.info("GetDeepUserDetailsByEmailId invoked for user with name = " + name);
+        Optional<User> oUser = userDao.findUserByEmailId(name);
 
-        if (oCustomer.isPresent()) {
-            log.info("Found customer for emailId = " + emailId);
-            return oCustomer.get();
+        if (oUser.isPresent()) {
+            log.info("Found user for emailId = " + emailId);
+            return oUser.get();
         }
 
-        log.info("No customer found for emailId = " + emailId);
+        log.info("No user found for emailId = " + emailId);
 
         return null;
     }
 
     @Override
-    public Customer handleRequest(Map<String, Object> s, Context context) {
+    public User handleRequest(Map<String, Object> s, Context context) {
 
         try {
             return execute((String) s.get("emailId"));
         } catch (Exception e) {
-            log.info("Failed to find customer" + e.toString());
+            log.info("Failed to find user: " + e.toString());
         }
 
         return null;

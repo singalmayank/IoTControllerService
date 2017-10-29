@@ -12,47 +12,44 @@
 // permissions and limitations under the License.
 
 
-package com.iot.home.function.customer;
+package com.iot.home.function.user;
 
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.iot.home.dao.DynamoDBCustomerDao;
-import com.iot.home.domain.Customer;
+import com.iot.home.dao.DynamoDBUserDao;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
 
 
-public class SaveUpdateCustomer implements RequestHandler<Map<String, Object>, Boolean> {
+public class DeleteUserByEmailId implements RequestHandler<Map<String, Object>, Boolean> {
 
-    private static final Logger log = Logger.getLogger(SaveUpdateCustomer.class);
+    private static final Logger log = Logger.getLogger(DeleteUserByEmailId.class);
 
-    private static final DynamoDBCustomerDao eventDao = DynamoDBCustomerDao.instance();
+    private static final DynamoDBUserDao userDao = DynamoDBUserDao.instance();
 
-    public void execute(Customer customer) {
+    private void execute(String emailId) {
 
-        if (null == customer) {
-            log.error("SaveEvent received null input");
-            throw new IllegalArgumentException("Cannot save null object");
+        if (null == emailId) {
+            log.error("DeleteEvent received null input");
+            throw new IllegalArgumentException("Cannot delete null object");
         }
 
-        log.info("Saving or updating event for team = " + customer.getEmailId());
-        eventDao.saveOrUpdateCustomer(customer);
-        log.info("Successfully saved/updated event");
+        log.info("Deleting user with email = " + emailId);
+        userDao.deleteUser(emailId);
+        log.info("Successfully deleted event");
     }
-    
 
     @Override
     public Boolean handleRequest(Map<String, Object> s, Context context) {
 
         try {
-            execute((Customer) s.get("customer"));
+            execute((String) s.get("emailId"));
         } catch (Exception e) {
-            log.info("Failed to save/update customer" + e.toString());
+            log.info("Failed to delete user: " + e.toString());
             return false;
         }
-
         return true;
     }
 }

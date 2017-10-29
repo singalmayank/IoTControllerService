@@ -16,53 +16,53 @@ package com.iot.home.dao;
 
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.iot.home.domain.Customer;
+import com.iot.home.domain.User;
 import com.iot.home.manager.DynamoDBManager;
 import org.apache.log4j.Logger;
 
 import java.util.*;
 
 
-public class DynamoDBCustomerDao implements CustomerDao {
+public class DynamoDBUserDao implements UserDao {
 
-    private static final Logger log = Logger.getLogger(DynamoDBCustomerDao.class);
+    private static final Logger log = Logger.getLogger(DynamoDBUserDao.class);
 
     private static final DynamoDBMapper mapper = DynamoDBManager.mapper();
 
-    private static volatile DynamoDBCustomerDao instance;
+    private static volatile DynamoDBUserDao instance;
 
 
-    private DynamoDBCustomerDao() { }
+    private DynamoDBUserDao() { }
 
-    public static DynamoDBCustomerDao instance() {
+    public static DynamoDBUserDao instance() {
 
         if (instance == null) {
-            synchronized(DynamoDBCustomerDao.class) {
+            synchronized(DynamoDBUserDao.class) {
                 if (instance == null)
-                    instance = new DynamoDBCustomerDao();
+                    instance = new DynamoDBUserDao();
             }
         }
         return instance;
     }
 
     @Override
-    public Optional<Customer> findCustomerByEmailId(String emailId) {
+    public Optional<User> findUserByEmailId(String emailId) {
 
-        Customer customer = mapper.load(Customer.class, emailId);
+        User user = mapper.load(User.class, emailId);
 
-        return Optional.ofNullable(customer);
+        return Optional.ofNullable(user);
     }
 
     @Override
-    public void saveOrUpdateCustomer(Customer customer) {
+    public void saveOrUpdateUser(User user) {
 
-        mapper.save(customer);
+        mapper.save(user);
     }
 
     @Override
-    public void deleteCustomer(String emailId) {
+    public void deleteUser(String emailId) {
 
-        Optional<Customer> oCustomer = findCustomerByEmailId(emailId);
+        Optional<User> oCustomer = findUserByEmailId(emailId);
         if (oCustomer.isPresent()) {
             mapper.delete(oCustomer.get());
         }
