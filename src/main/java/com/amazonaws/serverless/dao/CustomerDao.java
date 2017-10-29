@@ -12,19 +12,21 @@
 // permissions and limitations under the License.
 
 
-package com.amazonaws.serverless.util;
+package com.amazonaws.serverless.dao;
 
-/**
- *
- *  Static constants class
- *
- */
-public class Consts {
 
-    private Consts() {} // callers can't instantiate class itself
+import com.amazonaws.serverless.domain.Customer;
 
-    // "undefined" is the string sent by the Amazon API Gateway console when using
-    // the console's test functionality if an API parameter is left blank
-    public static final String UNDEFINED = "undefined";
+import java.util.List;
+import java.util.Optional;
+
+
+public interface CustomerDao {
+
+    Optional<Customer> findCustomerByEmailId(String emailId);
+
+    void saveOrUpdateCustomer(Customer customer);
+
+    void deleteCustomer(String emailId);
 
 }

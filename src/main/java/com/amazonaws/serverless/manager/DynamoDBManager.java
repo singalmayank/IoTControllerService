@@ -30,7 +30,7 @@ public class DynamoDBManager {
     private DynamoDBManager() {
 
         AmazonDynamoDBClient client = new AmazonDynamoDBClient();
-        client.setRegion(Region.getRegion(Regions.US_EAST_1));
+        client.setRegion(Region.getRegion(Regions.US_WEST_2));
         mapper = new DynamoDBMapper(client);
     }
 

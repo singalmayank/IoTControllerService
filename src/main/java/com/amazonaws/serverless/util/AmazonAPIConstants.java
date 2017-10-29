@@ -12,27 +12,19 @@
 // permissions and limitations under the License.
 
 
-package com.amazonaws.serverless.dao;
+package com.amazonaws.serverless.util;
 
+/**
+ *
+ *  Static constants class
+ *
+ */
+public class AmazonAPIConstants {
 
-import com.amazonaws.serverless.domain.Event;
+    private AmazonAPIConstants() {} // callers can't instantiate class itself
 
-import java.util.List;
-import java.util.Optional;
-
-
-public interface EventDao {
-
-    List<Event> findAllEvents();
-
-    List<Event> findEventsByCity(String city);
-
-    List<Event> findEventsByTeam(String team);
-
-    Optional<Event> findEventByTeamAndDate(String team, Long eventDate);
-
-    void saveOrUpdateEvent(Event event);
-
-    void deleteEvent(String team, Long eventDate);
+    // "undefined" is the string sent by the Amazon API Gateway console when using
+    // the console's test functionality if an API parameter is left blank
+    public static final String UNDEFINED = "undefined";
 
 }
