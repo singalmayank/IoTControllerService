@@ -12,7 +12,7 @@
 // permissions and limitations under the License.
 
 
-package com.amazonaws.serverless.pojo;
+package com.iot.home.pojo;
 
 /**
  *

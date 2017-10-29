@@ -12,15 +12,12 @@
 // permissions and limitations under the License.
 
 
-package com.amazonaws.serverless.dao;
+package com.iot.home.dao;
 
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.serverless.domain.Customer;
-import com.amazonaws.serverless.manager.DynamoDBManager;
+import com.iot.home.domain.Customer;
+import com.iot.home.manager.DynamoDBManager;
 import org.apache.log4j.Logger;
 
 import java.util.*;

@@ -12,7 +12,7 @@
 // permissions and limitations under the License.
 
 
-package com.amazonaws.serverless.manager;
+package com.iot.home.manager;
 
 
 import com.amazonaws.regions.Region;

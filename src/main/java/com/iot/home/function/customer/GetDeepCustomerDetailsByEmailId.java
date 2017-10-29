@@ -12,27 +12,29 @@
 // permissions and limitations under the License.
 
 
-package com.amazonaws.serverless.function;
+package com.iot.home.function.customer;
 
+
+import com.iot.home.dao.DynamoDBCustomerDao;
+import com.iot.home.domain.Customer;
+import com.iot.home.util.AmazonAPIConstants;
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+import org.apache.log4j.Logger;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Map;
 import java.util.Optional;
 
-import com.amazonaws.serverless.dao.DynamoDBCustomerDao;
-import com.amazonaws.serverless.util.AmazonAPIConstants;
-import org.apache.log4j.Logger;
 
-import com.amazonaws.serverless.domain.Customer;
+public class GetDeepCustomerDetailsByEmailId implements RequestHandler<Map<String, Object>, Customer> {
 
-
-public class CustomerFunctions {
-
-    private static final Logger log = Logger.getLogger(CustomerFunctions.class);
+    private static final Logger log = Logger.getLogger(GetDeepCustomerDetailsByEmailId.class);
 
     private static final DynamoDBCustomerDao eventDao = DynamoDBCustomerDao.instance();
 
-    public Customer getDeepCustomerDetailsByEmailId(String emailId) throws UnsupportedEncodingException {
+    private Customer execute(String emailId) throws UnsupportedEncodingException {
 
         if (null == emailId || emailId.isEmpty() || emailId.equals(AmazonAPIConstants.UNDEFINED)) {
             log.error("GetDeepCustomerDetailsByEmailId received null or empty emailId");
@@ -40,7 +42,7 @@ public class CustomerFunctions {
         }
 
         String name = URLDecoder.decode(emailId, "UTF-8");
-        log.info("GetDeepCustomerDetailsByEmailId invoked for city with name = " + name);
+        log.info("GetDeepCustomerDetailsByEmailId invoked for customer with name = " + name);
         Optional<Customer> oCustomer = eventDao.findCustomerByEmailId(name);
 
         if (oCustomer.isPresent()) {
@@ -53,28 +55,15 @@ public class CustomerFunctions {
         return null;
     }
 
-    public void saveOrUpdateEvent(Customer customer) {
+    @Override
+    public Customer handleRequest(Map<String, Object> s, Context context) {
 
-        if (null == customer) {
-            log.error("SaveEvent received null input");
-            throw new IllegalArgumentException("Cannot save null object");
+        try {
+            return execute((String) s.get("emailId"));
+        } catch (Exception e) {
+            log.info("Failed to find customer" + e.toString());
         }
 
-        log.info("Saving or updating event for team = " + customer.getEmailId());
-        eventDao.saveOrUpdateCustomer(customer);
-        log.info("Successfully saved/updated event");
+        return null;
     }
-
-    public void deleteEvent(Customer customer) {
-
-        if (null == customer) {
-            log.error("DeleteEvent received null input");
-            throw new IllegalArgumentException("Cannot delete null object");
-        }
-
-        log.info("Deleting event for team = " + customer.getEmailId());
-        eventDao.deleteCustomer(customer.getEmailId());
-        log.info("Successfully deleted event");
-    }
-
 }

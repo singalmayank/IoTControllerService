@@ -11,14 +11,14 @@
 // express or implied. See the License for the specific language governing
 // permissions and limitations under the License.
 
-package com.amazonaws.serverless.domain;
+package com.iot.home.domain;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
 
 import java.io.Serializable;
 
 
-@DynamoDBTable(tableName = "CUSTOMER")
+@DynamoDBTable(tableName = "Customer")
 public class Customer implements Serializable {
 
     private static final long serialVersionUID = -8243145429438016232L;
@@ -26,7 +26,7 @@ public class Customer implements Serializable {
     @DynamoDBHashKey
     private String emailId;
 
-    @DynamoDBRangeKey
+    @DynamoDBAttribute
     private Long creationDate;
 
     public Customer() { }

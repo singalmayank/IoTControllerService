@@ -12,21 +12,26 @@
 // permissions and limitations under the License.
 
 
-package com.amazonaws.serverless.dao;
+package com.iot.home.pojo;
+
+/**
+ *
+ * This simple POJO is for use with Amazon API Gateway so the
+ * Lambda functions can receive JSON objects from API Gateway,
+ * rather than simple Strings.
+ *
+ */
+public class Team {
+
+    private String teamName;
 
 
-import com.amazonaws.serverless.domain.Customer;
+    public String getTeamName() {
+        return teamName;
+    }
 
-import java.util.List;
-import java.util.Optional;
-
-
-public interface CustomerDao {
-
-    Optional<Customer> findCustomerByEmailId(String emailId);
-
-    void saveOrUpdateCustomer(Customer customer);
-
-    void deleteCustomer(String emailId);
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
 
 }

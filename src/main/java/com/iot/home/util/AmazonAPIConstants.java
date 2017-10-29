@@ -12,7 +12,7 @@
 // permissions and limitations under the License.
 
 
-package com.amazonaws.serverless.util;
+package com.iot.home.util;
 
 /**
  *
