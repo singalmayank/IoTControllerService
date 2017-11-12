@@ -18,7 +18,6 @@ package com.iot.home.function.thing;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iot.home.domain.AWSOnOffButton;
@@ -28,9 +27,9 @@ import org.apache.log4j.Logger;
 
 import java.util.Map;
 
-public class SetThingDesiredState implements RequestHandler<Map<String, Object>, Boolean> {
+public class SetThingReportedState implements RequestHandler<Map<String, Object>, Boolean> {
 
-    private static final Logger log = Logger.getLogger(SetThingDesiredState.class);
+    private static final Logger log = Logger.getLogger(SetThingReportedState.class);
 
     private static final ThingSao thingSao = AWSIoTThingSao.instance();
     private ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
