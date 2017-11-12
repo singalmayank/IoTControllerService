@@ -15,8 +15,14 @@
 package com.iot.home.function.user;
 
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iot.home.dao.DynamoDBUserDao;
+import com.iot.home.dao.UserDao;
+import com.iot.home.domain.AWSOnOffButton;
 import com.iot.home.domain.User;
+import com.iot.home.sao.AWSIoTThingSao;
+import com.iot.home.sao.ThingSao;
 import com.iot.home.util.AmazonAPIConstants;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
@@ -32,7 +38,10 @@ public class GetDeepUserDetailsByEmailId implements RequestHandler<Map<String, O
 
     private static final Logger log = Logger.getLogger(GetDeepUserDetailsByEmailId.class);
 
-    private static final DynamoDBUserDao userDao = DynamoDBUserDao.instance();
+    private static final UserDao userDao = DynamoDBUserDao.instance();
+    private static final ThingSao thingSao = AWSIoTThingSao.instance();
+    private ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
 
     public User execute(String emailId) throws UnsupportedEncodingException {
 
@@ -59,6 +68,9 @@ public class GetDeepUserDetailsByEmailId implements RequestHandler<Map<String, O
     public User handleRequest(Map<String, Object> s, Context context) {
 
         try {
+            String stringState = thingSao.getShadow("RO_Button");
+            AWSOnOffButton state = mapper.readValue(stringState, AWSOnOffButton.class);
+            log.info("State object: " + state);
             return execute((String) s.get("emailId"));
         } catch (Exception e) {
             log.info("Failed to find user: " + e.toString());
