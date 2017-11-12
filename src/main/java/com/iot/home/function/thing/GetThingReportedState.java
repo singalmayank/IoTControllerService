@@ -17,7 +17,6 @@ package com.iot.home.function.thing;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iot.home.domain.AWSOnOffButton;
@@ -27,43 +26,42 @@ import org.apache.log4j.Logger;
 
 import java.util.Map;
 
-public class SetThingReportedState implements RequestHandler<Map<String, Object>, Boolean> {
+public class GetThingReportedState implements RequestHandler<Map<String, Object>, String> {
 
-    private static final Logger log = Logger.getLogger(SetThingReportedState.class);
+    private static final Logger log = Logger.getLogger(GetThingReportedState.class);
 
     private static final ThingSao thingSao = AWSIoTThingSao.instance();
     private ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
 
 
-    public void execute(String thingId, String desiredState) throws Exception {
+    public String execute(String thingId) throws Exception {
 
-        if (null == thingId || null == desiredState || thingId.isEmpty() || desiredState.isEmpty()) {
-            log.error("Invalid SetThingDesiredState");
-            throw new IllegalArgumentException("thingId or desiredState invalid");
+        if (null == thingId || thingId.isEmpty()) {
+            log.error("Invalid GetThingReportedState request");
+            throw new IllegalArgumentException("thingId invalid");
         }
 
-        log.info("SetThingDesiredState for thingId = " + thingId + ", desiredState = " + desiredState);
+        log.info("GetThingReportedState for thingId = " + thingId);
 
         String stringState = thingSao.getShadow("RO_Button");
 
         AWSOnOffButton state = mapper.readValue(stringState, AWSOnOffButton.class);
-        state.getState().getDesired().setStatus(desiredState);
 
-        thingSao.updateShadow(thingId, mapper.writeValueAsString(state));
-        log.info("SetThingDesiredState success");
+        log.info("GetThingReportedState success");
+
+        return state.getState().getReported().getStatus();
     }
 
     @Override
-    public Boolean handleRequest(Map<String, Object> inputMap, Context context) {
+    public String handleRequest(Map<String, Object> inputMap, Context context) {
 
         try {
-            execute((String) inputMap.get("thingId"), (String) inputMap.get("desiredState"));
+            return execute((String) inputMap.get("thingId"));
         } catch (Exception e) {
             log.error("Failed to update thing state: " + e.toString());
-            return false;
         }
 
-        return true;
+        return "";
     }
 }
